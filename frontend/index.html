@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Inmobiliaria Pro</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <nav style="text-align: center; padding: 20px; background: #2c3e50;">
+        <a href="index.html" style="color: white; margin: 0 15px; text-decoration: none;">🏠 Inicio</a>
+        <a href="registro.html" style="color: white; margin: 0 15px; text-decoration: none;">➕ Publicar</a>
+    </nav>
+    <header>
+        <h1>Inmobiliaria Pro - Catálogo</h1>
+    </header>
+
+    <div class="filtros">
+        <button onclick="cargarInmuebles()">Todos</button>
+        <button onclick="filtrar('Bogota')">Bogota</button>
+        <button onclick="filtrar('Medellín')">Medellín</button>
+        <button onclick="filtrar('Cartagena')">Cartagena</button>
+    </div>
+
+    <main>
+        <div id="contenedor-inmuebles" class="grid-inmuebles">
+            <p>Cargando inmuebles...</p>
+        </div>
+    </main>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
