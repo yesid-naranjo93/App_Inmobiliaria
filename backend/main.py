@@ -1,8 +1,8 @@
 from ast import AsyncFor
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from backend.database import coleccion_inmuebles 
-from backend.models.inmueble import Inmueble
+from database import coleccion_inmuebles 
+from models.inmueble import Inmueble
 from bson import ObjectId
 
 app = FastAPI()
