@@ -1,7 +1,7 @@
 
 async function cargarInmuebles(ciudad = "") { 
     try {
-        const respuesta = await fetch('https://app-inmobiliaria.onrender.com/inmuebles');
+        const respuesta = await fetch('https://app-inmobiliario-1.onrender.com/inmuebles');
         let  inmuebles = await respuesta.json();
         
         const contenedor = document.getElementById('contenedor-inmuebles');
@@ -49,7 +49,7 @@ cargarInmuebles();
 async function eliminarInmueble(id) {
     if (confirm("¿Estás seguro de eliminar este inmueble?")) {
         try {
-            const respuesta = await fetch(`https://app-inmobiliaria.onrender.com/inmuebles/${id}`, {
+            const respuesta = await fetch(`https://app-inmobiliario-1.onrender.com/inmuebles/${id}`, {
                 method: 'DELETE'
             });
             if (respuesta.ok) {
