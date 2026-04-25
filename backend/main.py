@@ -1,9 +1,14 @@
 from ast import AsyncFor
+import token
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from backend.models import usuario
 from database import coleccion_inmuebles 
 from models.inmueble import Inmueble
 from bson import ObjectId
+from passlib.context import CryptContext
+import jwt
+from datetime import datetime, timedelta
 
 app = FastAPI()
 
@@ -15,6 +20,31 @@ app.add_middleware(CORSMiddleware,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Configuración de seguridad
+pwd_context = CryptContext (schemes=["bcrypt"], depracated="auto")
+SECRET_KEY = "Admin_1234"
+
+# Función para encriptar contraseñas
+def obtener_password_hash(password):
+    return pwd_context.hash(password)
+
+# --- RUTA PARA REGISTRAR ADMINS ---
+@app.post("/registrar")
+async def registrar_usuario(usuario: usuario):
+    usuario_dict = usuario.dict()
+    usuario_dict["password"] = obtener_password_hash(usuario.password)
+    await collecion_usuarios.insert_one(usuario_dict)
+    return {"mensaje": "Usuario administrativo creado con éxito"}
+
+# --- RUTA PARA LOGIN ---
+@app.post("/login")
+async def login(usuario: usuario):
+    user_db = await collecion_usuarios.find_one({"username":usuario.username})
+    if not user_db or not pwd_context.verify(usuario.password, user_db["password"]):
+        return {"error": "Usuario o contraseña incorrectos"}
+    token = jwt.encode ({"user": usuario.username}, SECRET_KEY, algorithm= "HS256")
+    return {"token": token, "mensaje": " Bienvenido al panel de control"}
 
 @app.get("/inmuebles")
 async def obtener_inmuebles():
