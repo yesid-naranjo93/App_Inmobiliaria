@@ -1,3 +1,8 @@
+const esAdmin = localStorage.getItem('token_admin') !== null;
+let botonesHtml = "";
+if (esAdmin) {
+    botonesHtml = '<button onclick="eliminarInmuebles('${ casa._id } ')" class="btn-eliminar">Eliminar</button>';
+}
 
 async function cargarInmuebles(ciudad = "") { 
     try {
