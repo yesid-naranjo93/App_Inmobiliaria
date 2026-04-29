@@ -25,7 +25,7 @@ app.add_middleware(CORSMiddleware,
 )
 
 # Configuración de seguridad
-pwd_context = CryptContext (schemes=["bcrypt"], deprecatedcated="auto")
+pwd_context = CryptContext (schemes=["bcrypt"], deprecated="auto")
 SECRET_KEY = "Admin_1234"
 
 # Función para encriptar contraseñas
