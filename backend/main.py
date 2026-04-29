@@ -1,5 +1,6 @@
 from ast import AsyncFor
 import token
+from warnings import deprecated
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from models import usuario
@@ -24,7 +25,7 @@ app.add_middleware(CORSMiddleware,
 )
 
 # Configuración de seguridad
-pwd_context = CryptContext (schemes=["bcrypt"], depracated="auto")
+pwd_context = CryptContext (schemes=["bcrypt"], deprecatedcated="auto")
 SECRET_KEY = "Admin_1234"
 
 # Función para encriptar contraseñas
