@@ -10,6 +10,7 @@ from passlib.context import CryptContext
 import jwt
 from datetime import datetime, timedelta
 from database import coleccion_usuarios  # Esto trae la conexión de la base de datos
+from models.usuario import usuario
 
 app = FastAPI()
 
