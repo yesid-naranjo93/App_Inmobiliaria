@@ -12,3 +12,4 @@ db = client.Inmobiliaria_Pro_DB
 # 4. Definimos las "tablas" (colecciones en MongoDB)
 coleccion_inmuebles = db.inmuebles
 coleccion_ganancias = db.ganancias
+coleccion_usuarios = db.usuarios

@@ -3,3 +3,6 @@ uvicorn
 motor
 pydantic
 python-multipart
+passlib[bcrypt]
+pyjwt
+python-multipart

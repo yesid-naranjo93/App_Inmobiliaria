@@ -9,6 +9,7 @@ from bson import ObjectId
 from passlib.context import CryptContext
 import jwt
 from datetime import datetime, timedelta
+from database import collecion_usuarios  # Esto trae la conexión de la base de datos
 
 app = FastAPI()
 
