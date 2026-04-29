@@ -2,7 +2,7 @@ from ast import AsyncFor
 import token
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from backend.models import usuario
+from models import usuario
 from database import coleccion_inmuebles 
 from models.inmueble import Inmueble
 from bson import ObjectId
