@@ -9,7 +9,7 @@ from bson import ObjectId
 from passlib.context import CryptContext
 import jwt
 from datetime import datetime, timedelta
-from database import collecion_usuarios  # Esto trae la conexión de la base de datos
+from database import coleccion_usuarios  # Esto trae la conexión de la base de datos
 
 app = FastAPI()
 
@@ -35,13 +35,13 @@ def obtener_password_hash(password):
 async def registrar_usuario(usuario: usuario):
     usuario_dict = usuario.dict()
     usuario_dict["password"] = obtener_password_hash(usuario.password)
-    await collecion_usuarios.insert_one(usuario_dict)
+    await coleccion_usuarios.insert_one(usuario_dict)
     return {"mensaje": "Usuario administrativo creado con éxito"}
 
 # --- RUTA PARA LOGIN ---
 @app.post("/login")
 async def login(usuario: usuario):
-    user_db = await collecion_usuarios.find_one({"username":usuario.username})
+    user_db = await coleccion_usuarios.find_one({"username":usuario.username})
     if not user_db or not pwd_context.verify(usuario.password, user_db["password"]):
         return {"error": "Usuario o contraseña incorrectos"}
     token = jwt.encode ({"user": usuario.username}, SECRET_KEY, algorithm= "HS256")
