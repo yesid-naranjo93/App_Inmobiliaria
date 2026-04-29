@@ -7,7 +7,7 @@ form.addEventListener('submit', async (e) => {
     const username = document.getElementById('usuario').value;
     const password = document.getElementById('password').value;
 
-    const respuesta = await fetch(`${API_URL}/inmuebles`);
+    const respuesta = await fetch(`${API_URL}/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password })
@@ -24,7 +24,7 @@ form.addEventListener('submit', async (e) => {
         const username = document.getElementById('usuario').value;
         const password = documento.getElementById('password').value;
 
-        const respuesta = await fecth(`${API_URL/registrar, {
+        const respuesta = await fetch(`${API_URL}/registrar`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username, password, rol: "admin" })
