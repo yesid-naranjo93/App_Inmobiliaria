@@ -9,12 +9,15 @@
     <div class="contenedor-login">
         <h2>Panel Administrativo</h2>
 
-        <!-- Importante: IDs iguales a tu login.js -->
-        <input type="text" id="usuario" placeholder="Nombre de usuario" required>
-        <input type="password" id="password" placeholder="Contraseña" required>
+        <!-- Agregamos la etiqueta form con el ID que busca tu JS -->
+        <form id="formulario-login">
+            <input type="text" id="usuario" placeholder="Nombre de usuario" required />
+            <input type="password" id="password" placeholder="Contraseña" required />
 
-        <button id="btnEntrar">Entrar</button>
-        <button id="btnRegistrar">Crear Admin</button>
+            <!-- Cambia el id a 'btnEntrar' si así está en tu JS, o simplemente deja que el submit del form lo maneje -->
+            <button type="submit" id="btnEntrar">Entrar</button>
+            <button type="button" id="btn-registrar">Crear Admin</button>
+        </form>
 
         <p id="mensaje-error"></p>
     </div>
