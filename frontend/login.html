@@ -3,19 +3,23 @@
 <head>
     <meta charset="utf-8" />
     <title> Inmobilaria - Acceso admin</title>
-    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/styles.css">
 </head>
 <body>
     <div class="contenedor-login">
-        <h2 >Panel Administrativo</h2>
-        <form id="formulario-login">
-            <input type="text" id="usuario" placeholder="Usuario" required />
-            <input type="password" id="password" placeholder="Contraseña" required />
-            <button type="submit">Entrar</button>
-            <button type="button" id="btn-registrar" style="background-color: gray">Crear admin</button>
-        </form> 
-        <p id="mensaje-error" style="color: red;"></p>
+        <h2>Panel Administrativo</h2>
+
+        <!-- Importante: IDs iguales a tu login.js -->
+        <input type="text" id="usuario" placeholder="Nombre de usuario" required>
+        <input type="password" id="password" placeholder="Contraseña" required>
+
+        <button id="btnEntrar">Entrar</button>
+        <button id="btnRegistrar">Crear Admin</button>
+
+        <p id="mensaje-error"></p>
     </div>
+
+    <!-- Asegúrate de que la ruta tenga el punto al principio -->
     <script src="./js/login.js"></script>
 </body>
 </html>
