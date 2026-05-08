@@ -13,12 +13,13 @@ from datetime import datetime, timedelta
 from database import coleccion_usuarios  # Esto trae la conexión de la base de datos
 from models.usuario import usuario
 
+
 app = FastAPI()
 
 # Esto permite que tu HTML (Frontend) hable con tu Python (Backend)
 app.add_middleware(CORSMiddleware,
    
-    allow_origins=["*"], # Permitir todas las conexiones por ahora
+    allow_origins=["https://yesid-naranjo93.github.io", "http://localhost:5500"], # Permitir todas las conexiones por ahora
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -74,7 +75,7 @@ async def crear_inmueble(inmueble:Inmueble):
 
 @app.delete("/inmuebles/{id}")
 async def eliminar_inmueble(id: str):
-    resultado = await inmuebles_col.delete_one({"_id": ObjectId(id)})
+    resultado = await coleccion_inmuebles.delete_one({"_id": ObjectId(id)})
     if resultado.deleted_count == 1:
         return {"mensaje": "Eliminado con éxito"}
     return {"error": "No se encontró"}
