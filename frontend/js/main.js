@@ -1,68 +1,65 @@
-const esAdmin = localStorage.getItem('token_admin') !== null;
-let botonesHtml = "";
-if (esAdmin) {
-    botonesHtml = `<button onclick="eliminarInmuebles('${casa._id} ')" class="btn-eliminar">Eliminar</button>`;
-}
+const API_URL = "https://app-inmobiliario-1.onrender.com";
 
-async function cargarInmuebles(ciudad = "") { 
+async function cargarInmuebles() {
+    const contenedor = document.getElementById('contenedor-inmuebles');
+
     try {
-        const respuesta = await fetch('https://app-inmobiliario-1.onrender.com/inmuebles');
-        let  inmuebles = await respuesta.json();
-        
-        const contenedor = document.getElementById('contenedor-inmuebles');
-        contenedor.innerHTML = ''; // Limpiar el mensaje de "cargando"
+        const respuesta = await fetch(`${API_URL}/inmuebles`);
+        const inmuebles = await respuesta.json();
 
-        // Si el usuario eligió una ciudad, filtramos la lista
-        if (ciudad !== "") {
-            inmuebles = inmuebles.filter (casa =>
-            casa.ubicacion.toLowerCase().includes(ciudad.toLowerCase())
-            );
-        }
+        // Limpiamos el contenedor antes de cargar
+        contenedor.innerHTML = "";
 
-        if (inmuebles.length === 0) {
-            contenedor.innerHTML = "<P>No hay inmuebles en esta yona aun.></p>";
-            return;
-        }
+        // Verificamos si el usuario es administrador una sola vez
+        const isAdmin = localStorage.getItem('token_admin');
+
         inmuebles.forEach(casa => {
-            const tarjeta = `
-                <div class="tarjeta">
-                    <img src="${casa.imagen_url}" alt="${casa.titulo}">
-                    <div style= "padding: 15px;">
+            // Creamos la tarjeta
+            const tarjeta = document.createElement('div');
+            tarjeta.classList.add('tarjeta-inmueble');
+
+            tarjeta.innerHTML = `
+                <img src="${casa.imagen || 'https://via.placeholder.com/150'}" alt="${casa.titulo}">
+                <div class="contenido">
                     <h3>${casa.titulo}</h3>
                     <p>${casa.descripcion}</p>
-                    <p><strong>Precio:</strong> $${casa.precio}</p>
-                    <p>📍 ${casa.ubicacion}</p>
-                    <button onclick="eliminarInmueble('${casa.id}')" style="background: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; margin-top: 10px;">
-                    🗑️ Eliminar
-                </button>
-                    </div>
+                    <span class="precio">$${casa.precio}</span>
+                    
+                    ${isAdmin ? `<button class="btn-eliminar" onclick="eliminarInmueble('${casa._id}')">Eliminar</button>` : ''}
                 </div>
             `;
-            contenedor.innerHTML += tarjeta;
+            contenedor.appendChild(tarjeta);
         });
+
     } catch (error) {
-        console.error("Error al cargar:", error);
+        console.error("Error al cargar inmuebles:", error);
     }
 }
-// Función que llaman los botones de filtro
-function filtrar(nombreCiudad){
-    cargarInmuebles(nombreCiudad);
-}
-// Ejecutar la función cuando abra la página
-cargarInmuebles();
 
 async function eliminarInmueble(id) {
-    if (confirm("¿Estás seguro de eliminar este inmueble?")) {
-        try {
-            const respuesta = await fetch(`https://app-inmobiliario-1.onrender.com/inmuebles/${id}`, {
-                method: 'DELETE'
-            });
-            if (respuesta.ok) {
-                alert("Eliminado con éxito");
-                cargarInmuebles(); // Recarga la lista automáticamente
+    if (!confirm("¿Estás seguro de que deseas eliminar este inmueble?")) return;
+
+    try {
+        const token = localStorage.getItem('token_admin');
+        const respuesta = await fetch(`${API_URL}/inmuebles/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`
             }
-        } catch (error) {
-            console.error("Error al eliminar:", error);
+        });
+
+        const resultado = await respuesta.json();
+
+        if (respuesta.ok) {
+            alert("Inmueble eliminado con éxito");
+            cargarInmuebles(); // Recargamos la lista
+        } else {
+            alert("Error: " + resultado.detail);
         }
+    } catch (error) {
+        console.error("Error al eliminar:", error);
     }
 }
+
+// Llamamos a la función al cargar la página
+document.addEventListener('DOMContentLoaded', cargarInmuebles);
