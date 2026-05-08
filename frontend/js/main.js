@@ -1,65 +1,74 @@
 const API_URL = "https://app-inmobiliario-1.onrender.com";
 
-async function cargarInmuebles() {
+// 1. Función para cargar inmuebles (Corregida)
+async function cargarInmuebles(ciudad = "") {
     const contenedor = document.getElementById('contenedor-inmuebles');
+    contenedor.innerHTML = "Cargando..."; // Mensaje temporal
 
     try {
         const respuesta = await fetch(`${API_URL}/inmuebles`);
-        const inmuebles = await respuesta.json();
+        let inmuebles = await respuesta.json();
 
-        // Limpiamos el contenedor antes de cargar
-        contenedor.innerHTML = "";
+        if (ciudad !== "") {
+            inmuebles = inmuebles.filter(casa =>
+                casa.ubicacion.toLowerCase().includes(ciudad.toLowerCase())
+            );
+        }
 
-        // Verificamos si el usuario es administrador una sola vez
+        contenedor.innerHTML = ""; // Limpiamos
+
         const isAdmin = localStorage.getItem('token_admin');
 
         inmuebles.forEach(casa => {
-            // Creamos la tarjeta
-            const tarjeta = document.createElement('div');
-            tarjeta.classList.add('tarjeta-inmueble');
-
-            tarjeta.innerHTML = `
-                <img src="${casa.imagen || 'https://via.placeholder.com/150'}" alt="${casa.titulo}">
-                <div class="contenido">
-                    <h3>${casa.titulo}</h3>
-                    <p>${casa.descripcion}</p>
-                    <span class="precio">$${casa.precio}</span>
-                    
-                    ${isAdmin ? `<button class="btn-eliminar" onclick="eliminarInmueble('${casa._id}')">Eliminar</button>` : ''}
+            const tarjeta = `
+                <div class="tarjeta">
+                    <img src="${casa.imagen_url || 'https://via.placeholder.com/150'}" alt="casa">
+                    <div style="padding: 15px;">
+                        <h3>casa</h3>
+                        <p>${casa.descripcion}</p>
+                        <p><strong>Precio:</strong> $${casa.precio}</p>
+                        <p>📍 ${casa.ubicacion}</p>
+                        
+                        ${isAdmin ? `<button onclick="eliminarInmueble('${casa._id}')" class="btn-eliminar">Eliminar</button>` : ''}
+                    </div>
                 </div>
             `;
-            contenedor.appendChild(tarjeta);
+            contenedor.innerHTML += tarjeta;
         });
-
     } catch (error) {
-        console.error("Error al cargar inmuebles:", error);
+        console.error("Error al cargar:", error);
+        contenedor.innerHTML = "Error al conectar con el servidor.";
     }
 }
 
+// 2. Función para eliminar (Asegurando que el ID no sea undefined)
 async function eliminarInmueble(id) {
-    if (!confirm("¿Estás seguro de que deseas eliminar este inmueble?")) return;
+    if (!id || id === 'undefined') {
+        alert("Error: ID de casa no encontrado");
+        return;
+    }
 
-    try {
-        const token = localStorage.getItem('token_admin');
-        const respuesta = await fetch(`${API_URL}/inmuebles/${id}`, {
-            method: 'DELETE',
-            headers: {
-                'Authorization': `Bearer ${token}`
+    if (confirm("¿Estás seguro de eliminar este inmueble?")) {
+        try {
+            const res = await fetch(`${API_URL}/inmuebles/${id}`, {
+                method: 'DELETE'
+            });
+            if (res.ok) {
+                alert("Eliminado con éxito");
+                cargarInmuebles();
+            } else {
+                alert("No se pudo eliminar. Revisa los permisos de CORS.");
             }
-        });
-
-        const resultado = await respuesta.json();
-
-        if (respuesta.ok) {
-            alert("Inmueble eliminado con éxito");
-            cargarInmuebles(); // Recargamos la lista
-        } else {
-            alert("Error: " + resultado.detail);
+        } catch (error) {
+            console.error("Error al eliminar:", error);
         }
-    } catch (error) {
-        console.error("Error al eliminar:", error);
     }
 }
 
-// Llamamos a la función al cargar la página
-document.addEventListener('DOMContentLoaded', cargarInmuebles);
+// 3. Función de filtrado para los botones
+function filtrar(nombreCiudad) {
+    cargarInmuebles(nombreCiudad);
+}
+
+// Iniciar al cargar la página
+document.addEventListener('DOMContentLoaded', () => cargarInmuebles());
